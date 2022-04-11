@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Post, Render, Req, Request } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, Render, Req, Request } from "@nestjs/common";
 import { CategoryService } from "./category.service";
 // import { CategoryRepository } from './category.repository';
 
@@ -25,8 +25,18 @@ export class CategoryController {
   //   return this.categoryRepo.create({ name: 'teste create category' });
   // }
 
-  @Get('test/:search')
-  test(@Param('search') search: string) {
-    return this.categoryRepo.match_query(search);
+  @Post('es')
+  insertData(@Body() data: any){
+    return this.categoryRepo.insertData(data);
+  }
+
+  @Get('es/create-indice/:indice')
+  createIndex(@Param('indice') indice: string){
+    return this.categoryRepo.createIndex(indice)
+  }
+
+  @Get('es/:search')
+  async search(@Param('search') search: string) {
+    return (search !== undefined && search.length > 0) ?? await this.categoryRepo.matchQuery(search);
   }
 }
